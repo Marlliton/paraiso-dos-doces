@@ -1,4 +1,5 @@
 import { SearchInput } from "./SearchInput";
+import { Widget } from "./Widget";
 
 interface MainProps {
   children?: any;
@@ -9,15 +10,18 @@ export function Main(props: MainProps) {
     <div
       className={`
       flex flex-1 text-zinc-400 items-center
-      p-3 h-12 flex-col 
+      p-3 h-12 flex-col relative w-full
     `}
     >
-      <div className={`
-        flex items-center flex-col w-3/5 px-10
-      `}>
+      <div
+        className={`
+        flex flex-col items-center w-full
+      `}
+      >
         <SearchInput />
         {props.children}
       </div>
+      <Widget />
     </div>
   );
 }
