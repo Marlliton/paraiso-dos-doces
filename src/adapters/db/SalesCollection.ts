@@ -24,14 +24,14 @@ export default class SalesCollection implements SaleRepository {
     }
   }
 
-  async getAll(): Promise<Sale[]> {
-    this.itens = [];
-    onSnapshot(collection(this.db, "sales"), async (snapshot) => {
+  getAll(callback: Function): void {
+    onSnapshot(collection(this.db, "sales"), async snapshot => {
+      this.itens = [];
       snapshot.forEach(sale => {
         this.itens.push(this.fromFirestore(sale));
+        callback(this.itens);
       });
     });
-    return this.itens;
   }
 
   get it() {

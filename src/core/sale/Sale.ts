@@ -1,40 +1,42 @@
-export default class Sale {
-  private _name: string;
-  private _street: string;
-  private _num: number;
-  private _reference: string;
-  private _order: string;
-  constructor(
-    name: string,
-    num: number,
-    street: string,
-    reference: string,
-    order: string
-  ) {
-    this._name = name;
-    this._num = num;
-    this._street = street;
-    this._reference = reference;
-    this._order = order;
+interface SaleProps {
+  name?: string;
+  street?: string;
+  num?: number;
+  reference?: string;
+  order?: string;
+  completed?: boolean;
+}
+
+export default class Sale implements SaleProps {
+  private _props: SaleProps;
+  constructor(props: SaleProps) {
+    this._props = props;
+  }
+
+  static pendent(props: SaleProps) {
+    return new Sale({
+      ...props,
+      completed: false,
+    });
   }
 
   get name() {
-    return this._name;
+    return this._props.name;
   }
 
   get num() {
-    return this._num;
+    return this._props.num;
   }
 
   get street() {
-    return this._street;
+    return this._props.street;
   }
 
   get reference() {
-    return this._reference;
+    return this._props.reference;
   }
 
   get order() {
-    return this._order;
+    return this._props.order;
   }
 }

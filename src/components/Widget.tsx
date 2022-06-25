@@ -1,12 +1,17 @@
 import { GiWrappedSweet } from "react-icons/gi";
-export function Widget() {
+interface WidgetProps {
+  showModal: (show: boolean) => void;
+}
+
+export function Widget(props: WidgetProps) {
   return (
     <div>
       <button
         className={`
-        bottom-6 right-6 absolute w-[calc(100%-3rem)] sm:w-auto flex items-center justify-center group bg-[#8257E5] rounded-full overflow-hidden hover:text-zinc-300
+        bottom-4 right-6 absolute w-[calc(100%-3rem)] sm:w-auto flex items-center justify-center group bg-[#8257E5] rounded-full overflow-hidden hover:text-zinc-300
           
         `}
+        onClick={() => props.showModal(true)}
       >
         <span className="h-11 w-11 m-2 pl-[2px]">
           <GiWrappedSweet size={40} />
