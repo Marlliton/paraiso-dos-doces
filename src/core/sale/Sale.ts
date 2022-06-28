@@ -1,10 +1,10 @@
+import User from "../User/User";
+import Order from "../Order/Order";
+
 interface SaleProps {
-  name?: string;
-  street?: string;
-  num?: number;
-  reference?: string;
-  order?: string;
-  completed?: boolean;
+  id?: string;
+  user?: User;
+  order?: Order;
 }
 
 export default class Sale implements SaleProps {
@@ -13,30 +13,15 @@ export default class Sale implements SaleProps {
     this._props = props;
   }
 
-  static pendent(props: SaleProps) {
-    return new Sale({
-      ...props,
-      completed: false,
-    });
-  }
-
-  get name() {
-    return this._props.name;
-  }
-
-  get num() {
-    return this._props.num;
-  }
-
-  get street() {
-    return this._props.street;
-  }
-
-  get reference() {
-    return this._props.reference;
+  get id() {
+    return this._props.id;
   }
 
   get order() {
     return this._props.order;
+  }
+
+  get user() {
+    return this._props.user;
   }
 }

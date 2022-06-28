@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .default-button {
+    @apply bg-[#8257e55d] rounded-lg p-3 relative hover:bg-[#8257e59d] transition-all;
+  }
+
+  .completed-button {
+    @apply text-blue-300 p-1 bg-[#8257e55d] rounded-lg disabled:cursor-not-allowed ;
+  }
+}
+
 html,
 body {
   padding: 0;

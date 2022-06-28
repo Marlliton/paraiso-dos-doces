@@ -2,16 +2,16 @@ import { useState } from "react";
 import { InputForm } from "./InputForm";
 
 interface ModalProps {
-  onSubmit: (data: any) => void;
+  onSubmit: (user: any, order: any) => void;
   showModal: (show: boolean) => void;
 }
 
 export function Modal(props: ModalProps) {
   const [name, setName] = useState<string>("");
-  const [order, setOrder] = useState<string>("");
+  const [description, setOrder] = useState<string>("");
   const [street, setStreet] = useState<string>("");
   const [num, setNum] = useState<string>("");
-  const [ref, setRef] = useState<string>("");
+  const [reference, setRef] = useState<string>("");
 
   function resetState() {
     setName("");
@@ -23,7 +23,7 @@ export function Modal(props: ModalProps) {
 
   function handleSubmit(e: any) {
     e.preventDefault();
-    props.onSubmit({ name, order, street, num, ref });
+    props.onSubmit({ name, street, num, reference }, { description });
     resetState();
   }
 
@@ -71,11 +71,15 @@ export function Modal(props: ModalProps) {
             cols={30}
             rows={5}
             onChange={e => setOrder(e.target.value)}
-            value={order}
+            value={description}
           ></textarea>
           <InputForm value={street} onChange={setStreet} placeholder="Rua" />
           <InputForm value={num} onChange={setNum} placeholder="Número" />
-          <InputForm value={ref} onChange={setRef} placeholder="referência" />
+          <InputForm
+            value={reference}
+            onChange={setRef}
+            placeholder="referência"
+          />
 
           <footer className="w-full md:w-[28rem]">
             <button

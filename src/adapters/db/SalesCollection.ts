@@ -1,15 +1,19 @@
 import {
   addDoc,
   collection,
+  doc,
   DocumentData,
   Firestore,
   getFirestore,
   onSnapshot,
-  QuerySnapshot,
+  QueryDocumentSnapshot,
+  updateDoc,
 } from "firebase/firestore";
 import app from "../../config";
+import Order from "../../core/Order/Order";
 import Sale from "../../core/sale/Sale";
 import { SaleRepository } from "../../core/sale/SalesRepository";
+import User from "../../core/User/User";
 
 export default class SalesCollection implements SaleRepository {
   private db: Firestore;
@@ -29,34 +33,53 @@ export default class SalesCollection implements SaleRepository {
       this.itens = [];
       snapshot.forEach(sale => {
         this.itens.push(this.fromFirestore(sale));
+
         callback(this.itens);
       });
     });
   }
 
-  get it() {
-    return this.itens;
+  async finishOrder(id: string) {
+    console.log(
+      "🚀 ~ file: SalesCollection.ts ~ line 47 ~ SalesCollection ~ finishOrder ~ id",
+      id
+    );
+
+    const orderDoc = doc(this.db, "sales", id);
+    await updateDoc(orderDoc, {
+      "order.finished": true,
+    });
   }
 
-  toFirestore(sale: Sale) {
+  private toFirestore(sale: Sale) {
     return {
-      name: sale.name,
-      street: sale.street,
-      num: sale.num,
-      reference: sale.reference,
-      order: sale.order,
-      date: new Date(),
+      user: {
+        name: sale.user?.name,
+        street: sale.user?.street,
+        num: sale.user?.num,
+        reference: sale.user?.reference,
+      },
+      order: {
+        description: sale.order?.description,
+        finished: sale.order?.finished,
+      },
     };
   }
 
-  fromFirestore(snapshot: any): Sale {
+  private fromFirestore(snapshot: QueryDocumentSnapshot<DocumentData>): Sale {
     const data = snapshot.data();
-    return new Sale(
-      data.name,
-      data.num,
-      data.street,
-      data.reference,
-      data.order
-    );
+    return new Sale({
+      id: snapshot.id,
+      user: new User({
+        name: data.user?.name,
+        num: data.user?.num,
+        street: data.user?.street,
+        reference: data.user?.reference,
+      }),
+      order: new Order({
+        description: data.order.description,
+        finished: data.order.finished,
+      }),
+    });
   }
 }

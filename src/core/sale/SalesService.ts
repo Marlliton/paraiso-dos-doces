@@ -7,6 +7,9 @@ export default class SalesService implements SaleRepository {
   constructor(repo: SaleRepository) {
     this._repo = repo;
   }
+  finishOrder(id: string): void {
+    return this._repo.finishOrder(id);
+  }
   save(sale: Sale): Promise<void> {
     return this._repo.save(sale);
   }

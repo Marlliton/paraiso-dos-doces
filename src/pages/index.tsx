@@ -8,6 +8,8 @@ import Sale from "../core/sale/Sale";
 import { getSalesService } from "../services";
 import Image from "next/image";
 import noData from "/public/no-data.gif";
+import User from "../core/User/User";
+import Order from "../core/Order/Order";
 
 export default function Home() {
   const [sales, setSales] = useState<Array<Sale> | null>(null);
@@ -16,6 +18,7 @@ export default function Home() {
     getSalesService().getAll(handleOnSnapshot);
   }, []);
 
+  //  TODO O id não está vinho, tenho que verificar isso.
   function handleOnSnapshot(data: Array<Sale>) {
     setSales(data);
   }
@@ -24,20 +27,28 @@ export default function Home() {
     return (
       <>
         {sales?.map((s, i) => {
-          return <Sales key={i} sale={s} />;
+          return (
+            <Sales
+              finishOrder={e => getSalesService().finishOrder(e)}
+              key={i}
+              sale={s}
+            />
+          );
         })}
       </>
     );
   }
 
-  async function onSubmit(data: any) {
+  async function onSubmit(user: User, order: Order) {
     await getSalesService().save(
       new Sale({
-        name: data.name,
-        order: data.order,
-        street: data.street,
-        num: data.num,
-        reference: data.ref,
+        user: new User({
+          name: user.name,
+          street: user.street,
+          num: user.num,
+          reference: user.reference,
+        }),
+        order: Order.createPendingOrder({ description: order.description }),
       })
     );
     setShowModal(false);
