@@ -1,23 +1,18 @@
-import Result from "../errors/Result";
-import Validate from "../shared/Validate"
-
-interface EmailProps {
-  email?: string;
-}
+import Result from "../validator/ResultValidator";
+import Validate from "../validator/Validate";
 
 export default class Email {
-  private _props: EmailProps;
-  constructor(props: EmailProps) {
-    this._props = props;
+  private _value: string;
+  private constructor(value: string) {
+    this._value = value;
   }
 
-  get email() {
-    return this._props.email;
+  get value() {
+    return this._value;
   }
 
-  static create(props: EmailProps): Result<Email> {
-    const emailError = Validate.email<Email>(props.email);
-
-    return emailError.isFailure ? emailError : Result.ok<Email>(new Email(props));
+  static create(value: string): Result<Email> {
+    const emailError = Validate.email<Email>(value);
+    return emailError.isFailure ? emailError : Result.ok<Email>(new Email(value));
   }
 }

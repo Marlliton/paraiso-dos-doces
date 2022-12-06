@@ -1,32 +1,32 @@
 import Email from "../email/Email";
-import Result from "../errors/Result";
 import Entity, { EntityProps } from "../shared/Entity";
 import Name from "../shared/Name";
+import ResultValidator from "../validator/ResultValidator";
+import Validate from "../validator/Validate";
 
 interface CustomerProps extends EntityProps {
-  name?: Result<Name>;
-  email?: Result<Email>;
+  name?: string;
+  email?: string;
   cellPhone?: string;
   imgUrl?: string;
 }
 
 export default class Customer extends Entity<Customer, CustomerProps> {
-  constructor(props: CustomerProps) {
+  private constructor(props: CustomerProps) {
     super(props);
   }
 
   get name() {
-    return this._props.name?.instance?.name;
+    return this._props.name;
   }
   get $name() {
-    return this._props.name?.instance
+    return Name.create(this.name!).instance;
   }
   get email() {
-    return this._props.email?.instance?.email;
-    
+    return this._props.email;
   }
   get $email() {
-    return this._props.email?.instance;
+    return Email.create(this.email!).instance;
   }
   get cellPhone() {
     return this._props.cellPhone;
@@ -36,12 +36,23 @@ export default class Customer extends Entity<Customer, CustomerProps> {
   }
 
   static create(props: CustomerProps) {
-    const emailError = props.email;
-    const nameError = props.name;
-    const hasErrors = Result.combineErros<Customer | Name | Email>([emailError!, nameError!]);
+    const customerProps = Validate.againstNullOrUndefined<Customer>([
+      { propName: "id", propValue: props.id },
+      { propName: "name", propValue: props.name },
+      { propName: "email", propValue: props.email },
+      { propName: "cellPhone", propValue: props.cellPhone },
+    ]);
 
-    if (hasErrors.error) return Result.fail<Customer>(hasErrors.error);
+    if (customerProps.isFailure) {
+      return ResultValidator.fail<Customer>(customerProps.errors!);
+    }
+    const emailOrError = Email.create(props.email!);
+    const nameOrError = Name.create(props.name!);
+    const hasErrors = ResultValidator.combineErros<any>([emailOrError, nameOrError]);
 
-    return Result.ok<Customer>(new Customer(props));
+    if (hasErrors.errors) {
+      return ResultValidator.fail<Customer>(hasErrors.errors);
+    }
+    return ResultValidator.ok<Customer>(new Customer(props));
   }
 }

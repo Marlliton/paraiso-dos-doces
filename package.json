@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "test:wc": "jest --watchAll --verbose --coverage --colors",
-    "test": "jest --verbose --colors"
+    "test": "jest --verbose --colors",
+    "test:clearCache": "jest --clearCache"
   },
   "dependencies": {
     "firebase": "^9.8.3",

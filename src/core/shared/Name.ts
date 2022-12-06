@@ -1,29 +1,25 @@
-import Result from "../errors/Result";
-import Validate from "./Validate";
-
-interface NameProps {
-  name: string;
-}
+import { CustomMessagesErrors } from "../errors/CustomMessagesErrors";
+import ResultValidator from "../validator/ResultValidator";
 
 export default class Name {
-  private _props: NameProps;
-  constructor(props: NameProps) {
-    this._props = props;
+  private _value: string;
+  private constructor(value: string) {
+    this._value = value;
   }
 
-  get name() {
-    return this._props.name;
+  get value() {
+    return this._value;
   }
 
   get initials() {
-    const [first, second] = this.name.split(" ");
+    const [first, second] = this.value.split(" ");
     console.log(first, second);
     return (first[0] + second[0]).toUpperCase();
   }
 
-  static create(props: NameProps): Result<Name> {
-    const nameErro = Validate.nome<Name>(props.name);
-
-    return nameErro.isFailure ? nameErro : Result.ok<Name>(new Name(props));
+  static create(value: string): ResultValidator<Name> {
+    if (value.length < 3 || value.length > 60)
+      return ResultValidator.fail<Name>([CustomMessagesErrors.INVALID_SIZE_NAME]);
+    return ResultValidator.ok<Name>(new Name(value));
   }
 }

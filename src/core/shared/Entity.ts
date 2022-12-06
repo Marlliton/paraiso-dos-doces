@@ -4,11 +4,15 @@ export interface EntityProps {
   id?: string;
 }
 
-export default abstract class Entity<Tipo, TipoProps extends EntityProps> extends ModelObject<Tipo, TipoProps> {
-
+export default abstract class Entity<Tipo, TipoProps extends EntityProps> extends ModelObject<
+  Tipo,
+  TipoProps
+> {
   constructor(props: TipoProps) {
-    super(props)
+    super(props);
   }
 
-  get id() { return this._props.id }
+  get id() {
+    return this._props.id;
+  }
 }
