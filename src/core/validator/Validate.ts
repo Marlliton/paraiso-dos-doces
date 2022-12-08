@@ -8,9 +8,17 @@ type againstNullOrUndefinedProps = {
 };
 
 export default class Validate {
-  static email<T>(email?: string): ResultValidator<T> {
+  static validEmail<T>(email?: string): ResultValidator<T> {
     const regex = /\S+@\S+\.\S+/;
     if (!regex.test(email!)) return ResultValidator.fail<T>([CustomMessagesErrors.INVALID_EMAIL]);
+
+    return ResultValidator.ok<T>();
+  }
+
+  static validPhoneNumber<T>(phoneNumber: string): ResultValidator<T> {
+    const regexNumberValidator = /(\(\d{2}\)\s?)?(\d{4,5})-(\d{4})/g;
+    if (!regexNumberValidator.test(phoneNumber))
+      return ResultValidator.fail<T>([CustomMessagesErrors.INVALID_PHONE_NUMBER]);
 
     return ResultValidator.ok<T>();
   }

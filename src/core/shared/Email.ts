@@ -12,7 +12,7 @@ export default class Email {
   }
 
   static create(value: string): Result<Email> {
-    const emailError = Validate.email<Email>(value);
+    const emailError = Validate.validEmail<Email>(value);
     return emailError.isFailure ? emailError : Result.ok<Email>(new Email(value));
   }
 }

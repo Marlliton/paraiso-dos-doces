@@ -16,7 +16,6 @@ describe("Teste da entidade produto", () => {
 
   test("Deve retornar erros se o tentar criar usuário com dados nulos", () => {
     const product = Product.create({});
-    console.log(product)
     expect(product.isFailure).toBe(true);
     expect(product.errors?.length).toBeGreaterThan(0);
   });

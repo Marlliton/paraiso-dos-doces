@@ -1,6 +1,7 @@
-import Email from "../email/Email";
+import Email from "../shared/Email";
 import Entity, { EntityProps } from "../shared/Entity";
 import Name from "../shared/Name";
+import PhoneNumber from "../shared/PhoneNumber";
 import ResultValidator from "../validator/ResultValidator";
 import Validate from "../validator/Validate";
 
@@ -31,6 +32,10 @@ export default class Customer extends Entity<Customer, CustomerProps> {
   get cellPhone() {
     return this._props.cellPhone;
   }
+
+  get $cellPhone() {
+    return PhoneNumber.create(this._props.cellPhone!).instance;
+  }
   get imgUrl() {
     return this._props.imgUrl;
   }
@@ -40,7 +45,6 @@ export default class Customer extends Entity<Customer, CustomerProps> {
       { propName: "id", propValue: props.id },
       { propName: "name", propValue: props.name },
       { propName: "email", propValue: props.email },
-      { propName: "cellPhone", propValue: props.cellPhone },
     ]);
 
     if (customerProps.isFailure) {
@@ -48,7 +52,8 @@ export default class Customer extends Entity<Customer, CustomerProps> {
     }
     const emailOrError = Email.create(props.email!);
     const nameOrError = Name.create(props.name!);
-    const hasErrors = ResultValidator.combineErros<any>([emailOrError, nameOrError]);
+    const numberOrError = PhoneNumber.create(props.cellPhone!);
+    const hasErrors = ResultValidator.combineErros<any>([emailOrError, nameOrError, numberOrError]);
 
     if (hasErrors.errors) {
       return ResultValidator.fail<Customer>(hasErrors.errors);

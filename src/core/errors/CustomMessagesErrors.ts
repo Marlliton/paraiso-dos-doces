@@ -4,5 +4,6 @@ export enum CustomMessagesErrors {
   EMPTY_EMAIL = "O email não pode ser nulo ou undefined.",
   INVALID_EMAIL = "Email inválido.",
   INVALID_SIZE_NAME = "Nome tem que está entre 3 e 60 caracteres.",
-  NULL = "Propriedade obrigatória não pode ser nula",
+  NULL = "Propriedade obrigatória não pode ser nula.",
+  INVALID_PHONE_NUMBER = "Número de telefone inválido."
 }
