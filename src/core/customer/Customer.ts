@@ -41,14 +41,14 @@ export default class Customer extends Entity<Customer, CustomerProps> {
   }
 
   static create(props: CustomerProps) {
-    const customerProps = Validate.againstNullOrUndefined<Customer>([
+    const customerProps = Validate.preventTooManyNullOrUndefined([
       { propName: "id", propValue: props.id },
       { propName: "name", propValue: props.name },
       { propName: "email", propValue: props.email },
     ]);
 
-    if (customerProps.isFailure) {
-      return ResultValidator.fail<Customer>(customerProps.errors!);
+    if (!customerProps.success) {
+      return ResultValidator.fail<Customer>(customerProps.message!);
     }
     const emailOrError = Email.create(props.email!);
     const nameOrError = Name.create(props.name!);
