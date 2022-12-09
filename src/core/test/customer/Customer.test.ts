@@ -32,7 +32,6 @@ describe("Teste da entidade customer", () => {
       imgUrl: "http://minha.com.br",
       name: "Teste Iniciais",
     });
-    console.log(customer.errors)
     expect(customer.instance?.$name?.initials.length).toBe(2);
   });
 });

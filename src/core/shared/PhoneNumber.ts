@@ -12,9 +12,9 @@ export default class PhoneNumber {
   }
 
   static create(value: string): ResultValidator<PhoneNumber> {
-    const numberOrError = Validate.validPhoneNumber<PhoneNumber>(value);
-    return numberOrError.isFailure
-      ? numberOrError
+    const numberError = Validate.validPhoneNumber(value);
+    return !numberError.success
+      ? ResultValidator.fail<PhoneNumber>(numberError.message!)
       : ResultValidator.ok<PhoneNumber>(new PhoneNumber(value));
   }
 }

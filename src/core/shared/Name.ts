@@ -13,7 +13,6 @@ export default class Name {
 
   get initials() {
     const [first, second] = this.value.split(" ");
-    console.log(first, second);
     return (first[0] + second[0]).toUpperCase();
   }
 

@@ -28,14 +28,14 @@ export default class Product extends Entity<Product, ProductProps> {
   }
 
   static create(props: ProductProps) {
-    const productProps = Validate.againstNullOrUndefined([
+    const productProps = Validate.preventTooManyNullOrUndefined([
       { propName: "name", propValue: props.name },
       { propName: "value", propValue: props.value },
       { propName: "amount", propValue: props.amount },
       { propName: "description", propValue: props.description },
     ]);
 
-    if (productProps.isFailure) return ResultValidator.fail<Product>(productProps.errors!);
+    if (!productProps.success) return ResultValidator.fail<Product>(productProps.message!);
 
     return ResultValidator.ok<Product>(new Product(props));
   }

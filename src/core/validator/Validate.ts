@@ -2,36 +2,52 @@ import CustomError from "../errors/CustomError";
 import { CustomMessagesErrors } from "../errors/CustomMessagesErrors";
 import ResultValidator from "./ResultValidator";
 
-type againstNullOrUndefinedProps = {
+export interface ValidateResult {
+  success: boolean;
+  message?: Array<string | CustomMessagesErrors>;
+}
+export interface ValidateArguments {
   propName: string;
   propValue: any;
-};
+}
+
+type ArgumentCollection = ValidateArguments[];
 
 export default class Validate {
-  static validEmail<T>(email?: string): ResultValidator<T> {
+  static validEmail(email?: string): ValidateResult {
     const regex = /\S+@\S+\.\S+/;
-    if (!regex.test(email!)) return ResultValidator.fail<T>([CustomMessagesErrors.INVALID_EMAIL]);
+    if (!regex.test(email!))
+      return { success: false, message: [CustomMessagesErrors.INVALID_EMAIL] };
 
-    return ResultValidator.ok<T>();
+    return { success: true };
   }
 
-  static validPhoneNumber<T>(phoneNumber: string): ResultValidator<T> {
+  static validPhoneNumber(phoneNumber: string): ValidateResult {
     const regexNumberValidator = /(\(\d{2}\)\s?)?(\d{4,5})-(\d{4})/g;
     if (!regexNumberValidator.test(phoneNumber))
-      return ResultValidator.fail<T>([CustomMessagesErrors.INVALID_PHONE_NUMBER]);
+      return { success: false, message: [CustomMessagesErrors.INVALID_PHONE_NUMBER] };
 
-    return ResultValidator.ok<T>();
+    return { success: true };
   }
 
-  static againstNullOrUndefined<T>(props: againstNullOrUndefinedProps[]): ResultValidator<T> {
-    const hasErrors: CustomMessagesErrors[] = [];
+  static preventNullOrUndefined(argument: any, argumentName: string): ValidateResult {
+    if (argument === null || argument === undefined) {
+      return { success: false, message: [`O Argumento ${argumentName} é nulo ou undefined.`] };
+    }
 
-    props.forEach(prop => {
-      if (!prop.propValue || prop.propValue === undefined || prop.propValue === null) {
-        hasErrors.push(CustomError.new(CustomMessagesErrors.NULL, prop.propName));
+    return { success: true };
+  }
+
+  static preventTooManyNullOrUndefined(args: ArgumentCollection): ValidateResult {
+    let errors = []
+
+    for (const arg of args) {
+      const result = this.preventNullOrUndefined(arg.propValue, arg.propName);
+      if (!result.success) {
+        errors.push(result.message?.[0]!);
       }
-    });
+    }
 
-    return hasErrors.length ? ResultValidator.fail<T>(hasErrors) : ResultValidator.ok<T>();
+    return errors.length ? { success: false, message: errors } : { success: true };
   }
 }

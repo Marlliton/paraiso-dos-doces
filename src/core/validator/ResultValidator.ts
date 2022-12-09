@@ -2,7 +2,7 @@ import { CustomMessagesErrors } from "../errors/CustomMessagesErrors";
 
 interface ResultProps<T> {
   isSuccess: boolean;
-  errors?: CustomMessagesErrors[];
+  errors?: Array<any>;
   value?: T;
 }
 
@@ -32,7 +32,7 @@ export default class ResultValidator<T> {
     return this._props.value;
   }
 
-  static fail<U>(errors: CustomMessagesErrors[]): ResultValidator<U> {
+  static fail<U>(errors: Array<any>): ResultValidator<U> {
     return new ResultValidator({ isSuccess: false, errors });
   }
 

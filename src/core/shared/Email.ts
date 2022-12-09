@@ -1,4 +1,4 @@
-import Result from "../validator/ResultValidator";
+import ResultValidator from "../validator/ResultValidator";
 import Validate from "../validator/Validate";
 
 export default class Email {
@@ -11,8 +11,10 @@ export default class Email {
     return this._value;
   }
 
-  static create(value: string): Result<Email> {
-    const emailError = Validate.validEmail<Email>(value);
-    return emailError.isFailure ? emailError : Result.ok<Email>(new Email(value));
+  static create(value: string): ResultValidator<Email> {
+    const emailError = Validate.validEmail(value);
+    return !emailError.success
+      ? ResultValidator.fail<Email>(emailError.message!)
+      : ResultValidator.ok<Email>(new Email(value));
   }
 }
