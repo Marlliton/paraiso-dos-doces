@@ -42,7 +42,6 @@ export default class Customer extends Entity<Customer, CustomerProps> {
 
   static create(props: CustomerProps) {
     const customerProps = Validate.preventTooManyNullOrUndefined([
-      { propName: "id", propValue: props.id },
       { propName: "name", propValue: props.name },
       { propName: "email", propValue: props.email },
     ]);

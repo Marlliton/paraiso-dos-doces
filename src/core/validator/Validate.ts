@@ -1,6 +1,4 @@
-import CustomError from "../errors/CustomError";
 import { CustomMessagesErrors } from "../errors/CustomMessagesErrors";
-import ResultValidator from "./ResultValidator";
 
 export interface ValidateResult {
   success: boolean;
@@ -32,14 +30,14 @@ export default class Validate {
 
   static preventNullOrUndefined(argument: any, argumentName: string): ValidateResult {
     if (argument === null || argument === undefined) {
-      return { success: false, message: [`O Argumento ${argumentName} é nulo ou undefined.`] };
+      return { success: false, message: [`O Argumento '${argumentName}' é nulo ou undefined.`] };
     }
 
     return { success: true };
   }
 
   static preventTooManyNullOrUndefined(args: ArgumentCollection): ValidateResult {
-    let errors = []
+    let errors = [];
 
     for (const arg of args) {
       const result = this.preventNullOrUndefined(arg.propValue, arg.propName);
